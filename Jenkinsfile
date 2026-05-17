@@ -13,7 +13,6 @@ pipeline {
     }
 
     environment {
-        DEBUG = 'true'
         appVersion = ''
         account_id = '596059882666'
         region = 'us-east-1'
