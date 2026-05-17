@@ -25,7 +25,7 @@ pipeline {
             steps{
                 script{
                     environment = params.ENVIRONMENT
-                    //appVersion = params.version
+                    appVersion = params.version
                     //account_id = pipelineGlobals.getAccountID(environment)
                 }
             }
