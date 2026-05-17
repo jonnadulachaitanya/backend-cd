@@ -3,21 +3,21 @@ pipeline {
       label 'AGENT-1'
     }
     options {
-        timeout(time: 300, unit: 'SECONDS')
+        timeout(time: 30, unit: 'MINUTES')
         disableConcurrentBuilds()
     }
     parameters{
         choice(name: 'ENVIRONMENT', choices: ['dev', 'qa', 'uat', 'pre-prod', 'prod'], description: 'Select your Environment')
         string(name: 'version',  description: 'Enter your application version')
-        //string(name: 'jira-id',  description: 'Enter your jira id')
+        string(name: 'jira-id',  description: 'Enter your jira id')
     }
 
     environment {
         appVersion = ''
-        account_id = '596059882666'
+        account_id = ''
         region = 'us-east-1'
         project = 'expense'
-        environment = 'development'
+        environment = ''
         component = 'backend'
     }
     stages {
@@ -27,6 +27,32 @@ pipeline {
                     environment = params.ENVIRONMENT
                     appVersion = params.version
                     //account_id = pipelineGlobals.getAccountID(environment)
+                }
+            }
+        }
+        stage('Integration tests'){
+            when {
+                expression {params.ENVIRONMENT == 'qa'}
+            }
+            steps{
+                script{
+                    sh """
+                        echo "Run integration tests"
+                    """
+                }
+            }
+        }
+        stage('Check JIRA'){
+            when {
+                expression {params.ENVIRONMENT == 'prod'}
+            }
+            steps{
+                script{
+                    sh """
+                        echo "check jira status"
+                        echo "check jira deployment window"
+                        echo "fail pipeline if above two are not true"
+                    """
                 }
             }
         }
